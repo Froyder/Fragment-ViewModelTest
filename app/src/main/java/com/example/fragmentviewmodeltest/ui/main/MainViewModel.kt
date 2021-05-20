@@ -4,29 +4,36 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.fragmentviewmodeltest.AppState
 import com.example.fragmentviewmodeltest.MainActivity
 import java.lang.Thread.sleep
 
-class MainViewModel(private val liveDataToObserve: MutableLiveData<Any> = MutableLiveData()) :
+class MainViewModel(private val liveDataToObserve: MutableLiveData<AppState> = MutableLiveData()) :
         ViewModel() {
 
-    var counter : Int = 0
+    //var counter : Int = 0
 
-    fun getData(): LiveData<Any> {
+    fun getLiveData() = liveDataToObserve
+    fun getWeather() = getDataFromLocalSource()
+
+
+    fun getData(): LiveData<AppState> {
         getDataFromLocalSource()
         return liveDataToObserve
     }
 
     private fun getDataFromLocalSource() {
+        liveDataToObserve.value = AppState.Loading
         Thread {
             sleep(1000)
-            liveDataToObserve.postValue(counter)
-            liveDataToObserve.postValue(Any())
+            //liveDataToObserve.postValue(counter)
+            liveDataToObserve.postValue(AppState.Success(Any()))
         }.start()
     }
 
+
     fun userClicked() {
-        counter++
+        //counter++
     }
 
 }

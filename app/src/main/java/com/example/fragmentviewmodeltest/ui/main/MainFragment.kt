@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.example.fragmentviewmodeltest.AppState
 import com.example.fragmentviewmodeltest.R
 import com.example.fragmentviewmodeltest.databinding.MainFragmentBinding
+import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
 
@@ -38,26 +40,34 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        val observer = Observer<Any> { renderData(it) }
-        viewModel.getData().observe(viewLifecycleOwner, observer)
+        viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
+        viewModel.getWeather()
+    }
 
-        binding.message.text = viewModel.counter.toString();
-
-        binding.buttontest.setOnClickListener {
-            push()
-            viewModel.userClicked()
-            binding.message.text = viewModel.counter.toString();
+    private fun renderData(appState: AppState) {
+        when (appState) {
+            is AppState.Success -> {
+                val weatherData = appState.weatherData
+                binding.loadingLayout.visibility = View.GONE
+                Snackbar.make(binding.mainView, "Success", Snackbar.LENGTH_LONG).show()
+            }
+            is AppState.Loading -> {
+                binding.loadingLayout.visibility = View.VISIBLE
+            }
+            is AppState.Error -> {
+                binding.loadingLayout.visibility = View.GONE
+                Snackbar
+                    .make(binding.mainView, "Error", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Reload") { viewModel.getWeather() }
+                    .show()
+            }
         }
     }
 
-    private fun push () {
-        Toast.makeText(context, "new", Toast.LENGTH_LONG).show()
-    }
 
-    private fun renderData(data: Any) {
-        Toast.makeText(context, "data", Toast.LENGTH_LONG).show()
-    }
+//    private fun push () {
+//        Toast.makeText(context, "new", Toast.LENGTH_LONG).show()
+//    }
 
 }
