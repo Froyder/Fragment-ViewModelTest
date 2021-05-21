@@ -54,6 +54,7 @@ class MainFragment : Fragment() {
             }
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE
+                Snackbar.make(binding.mainView, "Loading...", Snackbar.LENGTH_LONG).show()
             }
             is AppState.Error -> {
                 binding.loadingLayout.visibility = View.GONE

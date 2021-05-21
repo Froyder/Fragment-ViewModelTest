@@ -25,12 +25,11 @@ class MainViewModel(private val liveDataToObserve: MutableLiveData<AppState> = M
     private fun getDataFromLocalSource() {
         liveDataToObserve.value = AppState.Loading
         Thread {
-            sleep(1000)
+            sleep(5000)
             //liveDataToObserve.postValue(counter)
             liveDataToObserve.postValue(AppState.Success(Any()))
         }.start()
     }
-
 
     fun userClicked() {
         //counter++
