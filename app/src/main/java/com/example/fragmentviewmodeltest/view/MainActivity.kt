@@ -1,8 +1,8 @@
-package com.example.fragmentviewmodeltest
+package com.example.fragmentviewmodeltest.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.fragmentviewmodeltest.ui.main.MainFragment
+import com.example.fragmentviewmodeltest.R
 
 class MainActivity : AppCompatActivity() {
 

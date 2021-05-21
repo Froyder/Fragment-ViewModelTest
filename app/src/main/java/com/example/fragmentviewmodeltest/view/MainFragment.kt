@@ -1,18 +1,17 @@
-package com.example.fragmentviewmodeltest.ui.main
+package com.example.fragmentviewmodeltest.view
 
-import android.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.example.fragmentviewmodeltest.AppState
+import com.example.fragmentviewmodeltest.viewmodel.AppState
 import com.example.fragmentviewmodeltest.R
 import com.example.fragmentviewmodeltest.databinding.MainFragmentBinding
+import com.example.fragmentviewmodeltest.model.Weather
+import com.example.fragmentviewmodeltest.viewmodel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class MainFragment : Fragment() {
@@ -42,7 +41,7 @@ class MainFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner, Observer { renderData(it) })
-        viewModel.getWeather()
+        viewModel.getWeatherFromLocalSource()
     }
 
     private fun renderData(appState: AppState) {
@@ -50,7 +49,8 @@ class MainFragment : Fragment() {
             is AppState.Success -> {
                 val weatherData = appState.weatherData
                 binding.loadingLayout.visibility = View.GONE
-                Snackbar.make(binding.mainView, "Success", Snackbar.LENGTH_LONG).show()
+                setData(weatherData)
+                Snackbar.make(binding.mainView, "Success!", Snackbar.LENGTH_LONG).show()
             }
             is AppState.Loading -> {
                 binding.loadingLayout.visibility = View.VISIBLE
@@ -60,12 +60,23 @@ class MainFragment : Fragment() {
                 binding.loadingLayout.visibility = View.GONE
                 Snackbar
                     .make(binding.mainView, "Error", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Reload") { viewModel.getWeather() }
+                    .setAction("Reload") { viewModel.getLiveData() }
                     .show()
             }
         }
+
     }
 
+    private fun setData(weatherData: Weather) {
+        binding.cityName.text = weatherData.city.city
+        binding.cityCoordinates.text = String.format(
+                getString(R.string.city_coordinates),
+                weatherData.city.lat.toString(),
+                weatherData.city.lon.toString()
+        )
+        binding.temperatureValue.text = weatherData.temperature.toString()
+        binding.feelsLikeValue.text = weatherData.feelsLike.toString()
+    }
 
 //    private fun push () {
 //        Toast.makeText(context, "new", Toast.LENGTH_LONG).show()
