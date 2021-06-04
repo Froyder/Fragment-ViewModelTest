@@ -1,11 +1,10 @@
 package com.example.fragmentviewmodeltest.view
 
-import android.os.Build
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.fragmentviewmodeltest.R
 import com.example.fragmentviewmodeltest.databinding.MainActivityBinding
