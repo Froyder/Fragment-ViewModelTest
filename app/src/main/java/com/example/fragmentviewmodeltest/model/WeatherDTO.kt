@@ -1,8 +1,6 @@
 package com.example.fragmentviewmodeltest.model
 
-data class WeatherDTO(
-        val fact: FactDTO?
-)
+data class WeatherDTO(val fact: FactDTO?)
 
 data class FactDTO(
         val temp: Int?,

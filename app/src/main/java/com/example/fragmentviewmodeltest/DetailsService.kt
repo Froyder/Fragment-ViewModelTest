@@ -31,6 +31,7 @@ const val LONGITUDE_EXTRA = "Longitude"
 private const val REQUEST_GET = "GET"
 private const val REQUEST_TIMEOUT = 10000
 private const val REQUEST_API_KEY = "X-Yandex-API-Key"
+const val WEATHER_API_KEY = "952782dc-0dd1-4607-9d1b-cd68fc28da53"
 
 class DetailsService(name: String = "DetailService") : IntentService(name) {
 
@@ -55,23 +56,20 @@ class DetailsService(name: String = "DetailService") : IntentService(name) {
     private fun loadWeather(lat: String, lon: String) {
         try {
             val uri =
-                    URL("https://api.weather.yandex.ru/v2/informers?lat=${lat}&lon=${lon}")
+                    URL("https://api.weather.yandex.ru/v2/informers?lat=55.75396&lon=37.620393")
             lateinit var urlConnection: HttpsURLConnection
             try {
                 urlConnection = uri.openConnection() as HttpsURLConnection
                 urlConnection.apply {
                     requestMethod = REQUEST_GET
                     readTimeout = REQUEST_TIMEOUT
-                    addRequestProperty(REQUEST_API_KEY,
-                            BuildConfig.WEATHER_API_KEY
-                    )
+                    addRequestProperty(REQUEST_API_KEY, WEATHER_API_KEY)
                 }
 
                 val weatherDTO: WeatherDTO =
-                        Gson().fromJson(
-                                getLines(BufferedReader(InputStreamReader(urlConnection.inputStream))),
-                                WeatherDTO::class.java
-                        )
+                        Gson().fromJson(getLines(BufferedReader(InputStreamReader(urlConnection.inputStream))),
+                                WeatherDTO::class.java)
+
                 onResponse(weatherDTO)
             } catch (e: Exception) {
                 onErrorRequest(e.message ?: "Empty error")

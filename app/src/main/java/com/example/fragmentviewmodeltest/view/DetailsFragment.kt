@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.fragmentviewmodeltest.DetailsService
 import com.example.fragmentviewmodeltest.LATITUDE_EXTRA
@@ -19,6 +21,8 @@ import com.example.fragmentviewmodeltest.model.FactDTO
 import com.example.fragmentviewmodeltest.model.Weather
 import com.example.fragmentviewmodeltest.model.WeatherDTO
 import com.example.fragmentviewmodeltest.model.WeatherLoader
+import com.example.fragmentviewmodeltest.view.MainActivity
+import com.example.fragmentviewmodeltest.view.MainFragment
 
 const val DETAILS_INTENT_FILTER = "DETAILS INTENT FILTER"
 const val DETAILS_LOAD_RESULT_EXTRA = "LOAD RESULT"
@@ -48,7 +52,10 @@ class DetailsFragment : Fragment() {
                 DETAILS_INTENT_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
                 DETAILS_DATA_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
                 DETAILS_RESPONSE_EMPTY_EXTRA -> TODO(PROCESS_ERROR)
-                DETAILS_REQUEST_ERROR_EXTRA -> TODO(PROCESS_ERROR)
+                DETAILS_REQUEST_ERROR_EXTRA -> {Toast.makeText(context, "Loading Error", Toast.LENGTH_LONG).show();
+                            parentFragmentManager.beginTransaction()
+                            .replace(R.id.container, MainFragment.newInstance())
+                            .commitAllowingStateLoss() }
                 DETAILS_REQUEST_ERROR_MESSAGE_EXTRA -> TODO(PROCESS_ERROR)
                 DETAILS_URL_MALFORMED_EXTRA -> TODO(PROCESS_ERROR)
                 DETAILS_RESPONSE_SUCCESS_EXTRA -> renderData(
